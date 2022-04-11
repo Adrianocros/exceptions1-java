@@ -50,11 +50,18 @@ public class Reserva {
     }
 
     //Classe para atualizar datas
-    public void atualizacaoData(Date checkIn, Date checkOut){
-            this.checkIn = checkIn;
-            this.checkOut = checkOut;
+    public String atualizacaoData(Date checkIn, Date checkOut) {
+        Date now = new Date();
+        if (checkIn.before(now) || checkOut.before(now)) {
+            return "#### Erro na reserva: As datas de reserva para atualização devem ser datas furutas ! ####";
+        }
+        if (!checkOut.after(checkIn)) {
+            return "#### Erro na reserva: A data de Check-out não pode ser menor que a data de Check-in ! ####";
+        }
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        return null;
     }
-
     @Override
     public String toString(){
        return "Quarto "
