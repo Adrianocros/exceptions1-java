@@ -1,5 +1,7 @@
 package Model.Entities;
 
+import Model.Exceptions.DomainException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -12,7 +14,10 @@ public class Reserva {
     //Formatação da data
     private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Reserva(Integer numeroDoQuarto, Date checkIn, Date checkOut) {
+    public Reserva(Integer numeroDoQuarto, Date checkIn, Date checkOut) throws DomainException{
+        if (!checkOut.after(checkIn)) {
+            throw  new DomainException("#### Erro na reserva: A data de Check-out não pode ser menor que a data de Check-in ! ####");
+        }
         NumeroDoQuarto = numeroDoQuarto;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
@@ -50,17 +55,16 @@ public class Reserva {
     }
 
     //Classe para atualizar datas
-    public String atualizacaoData(Date checkIn, Date checkOut) {
+    public void atualizacaoData(Date checkIn, Date checkOut) throws DomainException {
         Date now = new Date();
         if (checkIn.before(now) || checkOut.before(now)) {
-            return "#### Erro na reserva: As datas de reserva para atualização devem ser datas furutas ! ####";
+            throw new DomainException("#### Erro na reserva: As datas de reserva para atualização devem ser datas furutas ! ####");
         }
         if (!checkOut.after(checkIn)) {
-            return "#### Erro na reserva: A data de Check-out não pode ser menor que a data de Check-in ! ####";
+            throw  new DomainException("#### Erro na reserva: A data de Check-out não pode ser menor que a data de Check-in ! ####");
         }
         this.checkIn = checkIn;
         this.checkOut = checkOut;
-        return null;
     }
     @Override
     public String toString(){
